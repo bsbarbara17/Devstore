@@ -19,7 +19,7 @@ app.post('/produto', async (req, resp) => {
     try{
         let produtoexist= await db.tb_produto.findOne({where: {nm_produto: req.body.nome} });
         if(produtoexist != null) {
-            resp.send({ erro: 'Produto ja existe!'})
+            return resp.send({ erro: 'Produto ja existe!'})
         } else {
             let { nome, categoria, preco_de, preco_por, avaliacao, estoque, imagem, descricao } = req.body;
             

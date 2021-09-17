@@ -19,6 +19,25 @@ const Botao = styled.div`
 
     align-self: flex-end;
   }
+
+  .button-create {
+  align-self: flex-end;
+  justify-self: flex-end;
+  padding-bottom: 1.5em;
+}
+
+.button-create  button {
+  width: 106px;
+  height: 36px;
+
+  background: #119FDC;
+  border-radius: 44px;
+  border: none;
+  color: white;
+  font-size: 14px;
+  margin-left: 2em;
+  font-weight: bold;
+}
 `;
 
 export { Botao };

@@ -17,7 +17,7 @@ const Input = styled.div`
     margin: 10px 0px 0px;
   }
 
-  .text-input {
+  .text-input input {
     width: 209px;
     height: 36px;
     background: #ffffff;

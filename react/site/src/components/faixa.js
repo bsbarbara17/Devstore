@@ -3,6 +3,9 @@ import styled from "styled-components";
 const Faixa = styled.div`
   display: flex;
   flex-direction: column;
+  position: sticky;
+  top: 0px;
+  height: 100vh;
 
   .logo {
     background-color: #2b3031;

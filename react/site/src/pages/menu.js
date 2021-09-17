@@ -14,12 +14,12 @@ import { Traco_Ciano } from "../components/traco_ciano";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import LoadingBar from 'react-top-loading-bar';
-
 import { confirmAlert } from 'react-confirm-alert'; 
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
 import { useState, useEffect, useRef} from "react";
+
+import LoadingBar from 'react-top-loading-bar';
 
 import Api from '../service/api';
 const api = new Api();
@@ -35,7 +35,7 @@ export default function Menu() {
   const [estoque, setEstoque] = useState('');
   const [imagem, setImagem] = useState('');
   const [descricao, setDescricao] = useState('');
-  const [idAlterando, setIdAlterando] = useState('');
+  const [idAlterando, setIdAlterando] = useState(0);
 
   const loading = useRef(null);
 
@@ -49,13 +49,26 @@ export default function Menu() {
   }
 
   async function listar() {
+    loading.current.continuousStart();
+
     let b = await api.listar();
     setProdutos(b);
+    //console.log(b);
+
+    loading.current.complete();
   }
 
   async function inserir() {
+    loading.current.continuousStart();
 
-    if(idAlterando == '') {
+    if ( nome === '' || categoria === '' || preco_de === ''|| preco_por === '' || avaliacao === '' || estoque === '' || imagem === '' || descricao === '' )
+        return toast.error( "Todos os campos precisa ser preenchido" );
+
+    if (isNaN(avaliacao), isNaN(preco_de), isNaN(preco_por), isNaN(estoque))
+        return toast.error( "Os campos de Avaliação, Preços e Estoque só pode ser preenchido com número" );
+
+
+    if(idAlterando === 0) {
       let b = await api.inserir(nome, categoria, preco_de, preco_por, avaliacao, estoque, imagem, descricao);
 
       if(b.erro)
@@ -74,6 +87,8 @@ export default function Menu() {
     limparCampos();
     listar();
     await atualizar();
+
+    loading.current.complete();
   }
 
   function limparCampos() {
@@ -89,6 +104,8 @@ export default function Menu() {
   }
 
   function remover(id) {
+    loading.current.continuousStart();
+
     confirmAlert({
         title: 'Remover Produto',
         message: `Tem certeza que deseja remover o produto ${id} ?`,
@@ -109,7 +126,9 @@ export default function Menu() {
             label: 'Não'
           }
         ]
-    });   
+    }); 
+    
+    loading.current.complete();
   }
 
   async function editar(item) {
@@ -136,17 +155,17 @@ export default function Menu() {
       <LoadingBar color="#10eaea" ref={loading} />
       <Perfil>
         <div class="foto-admin">
-          <img src="/imgs/fotobruninho.png" alt="" />
-          Olá, <Font_Bold> Bruno de Oliveira </Font_Bold>
+          <img src="/imagem/fotobruninho.png" alt="" />
+          Olá, <Font_Bold> <b> Bruno de Oliveira </b> </Font_Bold>
           <div class="notificacao">3</div>
         </div>
 
         <div class="botoes">
           <button className="botao-azul">
-            <img src="/imgs/atualizar.svg" alt="" />
+            <img src="/imagem/atualizar.png" alt="" />
           </button>
           <button className="botao-azul">
-            <img src="/imgs/sair.svg" alt="" />
+            <img src="/imagem/sair.png" alt="" />
           </button>
         </div>
       </Perfil>
@@ -156,7 +175,7 @@ export default function Menu() {
       <Faixa3>
         <Titulo>
           {" "}
-          <Traco_Ciano /> {idAlterando == 0 ? "Novo Produto" : "Alterando Produto" + idAlterando } {" "}
+          <Traco_Ciano /> {idAlterando === 0 ? "Novo Produto" : "Alterando Produto " + idAlterando }  {" "}
         </Titulo>
 
         <div className="alinhar">
@@ -208,8 +227,6 @@ export default function Menu() {
                 <textarea
                   id="nome"
                   name="nome"
-                  rows="5"
-                  cols="33"
                   class="area-input"
                   value={descricao} onChange={e => setDescricao(e.target.value)}
                 ></textarea>
@@ -218,7 +235,7 @@ export default function Menu() {
           </Input>
 
           <Botao>
-            <button onClick={inserir}> {idAlterando == 0 ? "Cadastrar" : "Alterar"} </button>
+            <div class="button-create"> <button onClick={inserir}> {idAlterando === 0 ? "Cadastrar" : "Alterar"} </button> </div>
           </Botao>
         </div>
       </Faixa3>
@@ -235,38 +252,39 @@ export default function Menu() {
         <Tabela>
           <thead>
             <Cab>
+              <th class="a"></th>
               <th>ID</th>
               <th>Produto</th>
               <th>Categoria</th>
               <th>Preço</th>
               <th>Estoque</th>
-              <th></th>
-              <th></th>
+              <th class="a"></th>
+              <th class="a"></th>
             </Cab>
           </thead>
 
           <tbody>
-            {produtos.map((item, i) =>
-              <Tab1>
-                  <tr className={i % 2 == 0 ? "linha-alterada" : "linha-alterada2"}>
-                  <td>
-                    {" "}
-                    <img src={item.img_produto} style={{ width: '40px', height:'40px'}} /> {" "}
-                  </td>
-                  <td> {item.id_produto}</td>
-                  <td title={item.nm_produto}>
-                    {item.nm_produto != null && item.nm_produto.length >= 12
-                    ? item.nm_produto.substr(0, 12) + '...'
-                    : item.nm_produto}
-                  </td>
-                  <td> {item.ds_categoria} </td>
-                  <td> {item.vl_preco_por} </td>
-                  <td> {item.qtd_estoque} </td>
-                  <td className="coluna-acao"> <button onClick={() => editar(item)}> <img src="/imgs/editar.svg" alt="" /> </button> </td>
-                  <td className="coluna-acao"> <button onClick={() => remover(item.id_produto)}> <img src="/imgs/lixeira.svg" alt="" /> </button> </td>
-                </tr>
-              </Tab1>
-            )}
+             <Tab1>
+                {produtos.map((item, i) =>
+                  <tr className={i % 2 === 0 ? "linha-alterada" : "linha-alterada2"}>
+                    <td>
+                      {" "}
+                      <img src={item.img_produto} style={{ width: '40px', height:'40px'}} /> {" "}
+                    </td>
+                    <td> {item.id_produto}</td>
+                    <td title={item.nm_produto}>
+                      {item.nm_produto != null && item.nm_produto.length >= 12
+                      ? item.nm_produto.substr(0, 12) + '...'
+                      : item.nm_produto}
+                    </td>
+                    <td> {item.ds_categoria} </td>
+                    <td> {item.vl_preco_por} </td>
+                    <td> {item.qtd_estoque} </td>
+                    <td className="coluna-acao"> <button onClick={() => editar(item)}> <img src="/imagem/editar.svg" alt="" /> </button> </td>
+                    <td className="coluna-acao"> <button onClick={() => remover(item.id_produto)}> <img src="/imagem/deletar.svg" alt="" /> </button> </td>
+                  </tr>
+              )}
+            </Tab1>
           </tbody>
         </Tabela>
       </Faixa3>

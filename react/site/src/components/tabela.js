@@ -26,10 +26,13 @@ const Tabela = styled.table`
   th {
     border: none;
     color: #ffffff;
-    height: 67px;
-    width: 119px;
-    text-align: center;
+    height: 61.93px;
+    width: 150px;
+    text-align: left;
+    padding: 1em;
+    font-weight: 800;
   }
+
 
   button {
     border: none;
@@ -40,6 +43,10 @@ const Tabela = styled.table`
   .botao img {
     width: 25px;
     height: 30px;
+  }
+
+  .a {
+    width: -.5em;
   }
 `;
 

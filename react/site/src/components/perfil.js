@@ -28,6 +28,7 @@ const Perfil = styled.div`
 
   .foto-admin b {
     color: #4a4a4a;
+    margin-left: 5px;
   }
 
   .notificacao {

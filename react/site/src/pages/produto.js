@@ -8,14 +8,14 @@ export default function Produto() {
   return (
     <Faixa>
       <div class="logo">
-        <img src="/imgs/logo.png" alt="" />
+        <img src="/imagem/logo.png" alt="" />
         <Text_Ciano>Dev</Text_Ciano>Store
       </div>
 
       <Cor_diferente />
 
       <div class="menu-gerenciamento">
-        Gerenciamento <img src="/imgs/seta.png" alt="" />
+        Gerenciamento <img src="/imagem/seta.png" alt="" />
       </div>
 
       <div class="ger-text">
