@@ -17,6 +17,13 @@ app.get('/produto', async (req, resp) => {
 
 app.post('/produto', async (req, resp) => {
     try{
+        if ( nome === '' || categoria === '' || preco_de === ''|| preco_por === '' || avaliacao === '' || estoque === '' || imagem === '' || descricao === '' )
+            return toast.error( "Todos os campos precisa ser preenchido" );
+
+        if (isNaN(avaliacao), isNaN(preco_de), isNaN(preco_por), isNaN(estoque))
+            return toast.error( "Os campos de Avaliação, Preços e Estoque só pode ser preenchido com número" );
+
+
         let produtoexist= await db.tb_produto.findOne({where: {nm_produto: req.body.nome} });
         if(produtoexist != null) {
             return resp.send({ erro: 'Produto ja existe!'})
